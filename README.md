@@ -1,32 +1,25 @@
-<<<<<<< HEAD
-# NetlifyAngularFrontend
+# 🚀 Netlify Angular Frontend – CI/CD Pipeline (GitHub Actions)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+This project is a fully automated **Angular frontend** deployed on **Netlify** using a complete **CI/CD pipeline** built with **GitHub Actions**.  
+Every commit to the `main` branch automatically:
 
-## Development server
+1️⃣ Builds the Angular app  
+2️⃣ Deploys to Netlify  
+3️⃣ Sends an HTML deployment email notification  
+4️⃣ Logs build & deploy details  
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## 📁 Project Overview
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+**Project Name:** netlify-angular-frontend  
+**Technology:** Angular 17+  
+**Deployment:** Netlify  
+**CI/CD:** GitHub Actions  
+**Notifications:** Gmail SMTP  
+**Build Tool:** Node.js + Angular CLI
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 📦 Folder Structure
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-=======
-# netlify-angular-frontend
-netlify-angular-frontend
->>>>>>> b7e32801df7b71862b9f6f76e64ecce0492247c9
