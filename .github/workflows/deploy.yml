@@ -1,0 +1,184 @@
+# ============================================
+#  GitHub Actions: Angular → Netlify CI/CD
+#  Email Alerts + Commit Metadata
+# ============================================
+
+name: Angular CI/CD → Netlify
+
+on:
+  push:
+    branches:
+      - main        # Trigger workflow when pushing to main branch
+
+env:
+  # FINAL BUILD DIRECTORY (from angular.json)
+  BUILD_DIR: "dist/netlify-angular-frontend"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ci-cd-netlify-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      # ------------------------------------------------------
+      # STEP 1 — CHECKOUT CODE
+      # ------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ------------------------------------------------------
+      # STEP 2 — COLLECT COMMIT INFO
+      # ------------------------------------------------------
+      - name: Get latest commit metadata
+        id: commit_info
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_SUBJECT=$(git log -1 --pretty=%s)
+          COMMIT_AUTHOR=$(git log -1 --pretty='%an <%ae>')
+          COMMIT_DATE=$(git log -1 --pretty=format:'%Y-%m-%d %H:%M:%S')
+
+          echo "commit_msg<<EOF" >> $GITHUB_OUTPUT
+          echo "${COMMIT_MSG}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "commit_subject=${COMMIT_SUBJECT}" >> $GITHUB_OUTPUT
+          echo "commit_author=${COMMIT_AUTHOR}" >> $GITHUB_OUTPUT
+          echo "commit_date=${COMMIT_DATE}" >> $GITHUB_OUTPUT
+
+      # ------------------------------------------------------
+      # STEP 3 — SETUP NODE
+      # ------------------------------------------------------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      # ------------------------------------------------------
+      # STEP 4 — INSTALL DEPENDENCIES
+      # ------------------------------------------------------
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      # ------------------------------------------------------
+      # STEP 5 — BUILD ANGULAR APP
+      # ------------------------------------------------------
+      - name: Build Angular app
+        run: |
+          npm run build -- --configuration production || npm run build
+
+      # ------------------------------------------------------
+      # STEP 6 — DEPLOY TO NETLIFY
+      # ------------------------------------------------------
+      - name: Deploy to Netlify
+        id: netlify_deploy
+        uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ${{ env.BUILD_DIR }}
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          site-id: ${{ secrets.NETLIFY_SITE_ID }}
+
+      # ------------------------------------------------------
+      # STEP 7 — CREATE SUMMARY
+      # ------------------------------------------------------
+      - name: Build result summary
+        id: summary
+        run: |
+          TRIGGERED_AT=$(date '+%Y-%m-%d %H:%M:%S')
+          STATUS="SUCCESS"
+          if [ "${{ steps.netlify_deploy.outcome }}" != "success" ]; then
+            STATUS="FAILED"
+          fi
+
+          echo "triggered_at=${TRIGGERED_AT}" >> $GITHUB_OUTPUT
+          echo "deploy_status=${STATUS}" >> $GITHUB_OUTPUT
+
+      # ------------------------------------------------------
+      # STEP 8 — SEND SUCCESS EMAIL
+      # ------------------------------------------------------
+      - name: Send Success Email
+        if: ${{ steps.netlify_deploy.outcome == 'success' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🚀 Angular Deployment SUCCESS — ${{ steps.commit_info.outputs.commit_subject }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: "Angular Deployment Bot <${{ secrets.MAIL_USERNAME }}>"
+          content_type: text/html
+          body: |
+            <h2>🚀 Deployment Successful!</h2>
+            <p><b>Repository:</b> ${{ github.repository }}</p>
+            <p><b>Branch:</b> ${{ github.ref_name }}</p>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+              <tr>
+                <th>S.No</th>
+                <th>Commit Message</th>
+                <th>Author</th>
+                <th>Date & Time</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>${{ steps.commit_info.outputs.commit_msg }}</td>
+                <td>${{ steps.commit_info.outputs.commit_author }}</td>
+                <td>${{ steps.commit_info.outputs.commit_date }}</td>
+              </tr>
+            </table>
+
+            <p><b>Deployed At:</b> ${{ steps.summary.outputs.triggered_at }}</p>
+            <p><b>Netlify URL:</b> ${{ steps.netlify_deploy.outputs.deploy_url }}</p>
+            <p>Best Regards,<br/>Your Deployment Bot 🤖</p>
+
+      # ------------------------------------------------------
+      # STEP 9 — SEND FAILURE EMAIL
+      # ------------------------------------------------------
+      - name: Send Failure Email
+        if: ${{ failure() }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "❌ Angular Deployment FAILED — ${{ steps.commit_info.outputs.commit_subject }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: "Angular Deployment Bot <${{ secrets.MAIL_USERNAME }}>"
+          content_type: text/html
+          body: |
+            <h2>❌ Deployment Failed!</h2>
+            <p><b>Repository:</b> ${{ github.repository }}</p>
+            <p><b>Branch:</b> ${{ github.ref_name }}</p>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+              <tr>
+                <th>S.No</th>
+                <th>Commit Message</th>
+                <th>Author</th>
+                <th>Date & Time</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>${{ steps.commit_info.outputs.commit_msg }}</td>
+                <td>${{ steps.commit_info.outputs.commit_author }}</td>
+                <td>${{ steps.commit_info.outputs.commit_date }}</td>
+              </tr>
+            </table>
+
+            <p><b>Failed At:</b> ${{ steps.summary.outputs.triggered_at }}</p>
+            <p><b>GitHub Logs:</b> <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Logs</a></p>
+            <p>Best Regards,<br/>Your Deployment Bot 🤖</p>
