@@ -1,1 +1,13 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Username:</label>
+    <input type="text" formControlName="username" />
+  </div>
+  <div>
+    <label>Password:</label>
+    <input type="password" formControlName="password" />
+  </div>
+  <button type="submit" [disabled]="loginForm.invalid">Login</button>
+</form>
+
+<div *ngIf="errorMsg" style="color:red;">{{ errorMsg }}</div>
