@@ -1,0 +1,21 @@
+# ==========================================
+# ANGULAR CLI COMMANDS USED IN THIS PROJECT
+# (Components, Service, Guard)
+# ==========================================
+
+
+# ---------- COMPONENTS ----------
+ng g c home              # HomeComponent (main landing page)
+ng g c login             # LoginComponent (login form)
+ng g c register          # RegisterComponent (signup form)
+ng g c test              # TestComponent (test/demo page)
+ng g c logout-button     # LogoutButtonComponent (handles logout UI)
+ng g c profile           # ProfileComponent (user profile page)
+
+
+# ---------- SERVICE ----------
+ng g s login             # LoginService (handles login, register, token, profile)
+
+
+# ---------- GUARD ----------
+ng g g cactivate         # CactivateGuard (protects routes using canActivate)
