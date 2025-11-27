@@ -1,0 +1,24 @@
+No problem Raghu — your system simply doesn’t have yq installed.
+Instead of wasting time installing new tools, I'll give you the FASTEST and GUARANTEED method, using only PowerShell + pip.
+
+Let’s fix your YAML properly and safely.
+
+✅ Best, Easiest, Working Solution: Use yamllint
+Step 1 — Install yamllint (works everywhere)
+
+Run this in PowerShell:
+pip install yamllint
+
+If pip not installed, run:
+py -m pip install yamllint
+
+Perfect Raghu — yamllint is installed successfully ✔🔥
+Now you can validate your CI/CD YAML file locally.
+
+Here is the command you must run:
+
+✅ Run YAML Validation Command
+
+Inside your project folder:
+yamllint .github/workflows/deploy.yml
+

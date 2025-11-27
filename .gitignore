@@ -1,18 +1,27 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# ================================================
+# Angular / Node.js Project - Final .gitignore
+# Production ready for CI/CD + Netlify
+# ================================================
 
-# Compiled output
+# Angular build output
 /dist
+/.angular/cache
 /tmp
 /out-tsc
 /bazel-out
 
-# Node
+# Node.js dependencies
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
 
-# IDEs and editors
-.idea/
+# Environment files (never commit secrets)
+.env
+*.env
+
+# IDEs and editors (ignore workspace trash)
+/.idea/
 .project
 .classpath
 .c9/
@@ -20,23 +29,41 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
-# Visual Studio Code
+# Visual Studio Code settings
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
-# Miscellaneous
-/.angular/cache
+# VSCode local history
+.history/
+
+# Angular / Sass cache
 .sass-cache/
+
+# Misc lock/log/test files
 /connect.lock
 /coverage
 /libpeerconnection.log
 testem.log
-/typings
+/typings/
 
-# System files
+# System generated files
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+
+# OS junk files
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Git Merge conflict backup files
+*.orig
+
+# ================================================
+# End of .gitignore
+# ================================================
