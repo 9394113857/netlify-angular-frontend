@@ -1,0 +1,21 @@
+##############################################
+# FILE: git_merge_fix_commands.txt
+# PURPOSE: Fix merge errors between local and 
+#          remote GitHub main branch.
+##############################################
+
+# STEP 1 — Pull remote changes even if histories differ
+git pull origin main --allow-unrelated-histories
+
+# STEP 2 — Stage all local files
+git add .
+
+# STEP 3 — Commit merge + local changes
+git commit -m "Merged remote repo and added full Flask backend"
+
+# STEP 4 — Push everything to GitHub main branch
+git push -u origin main
+
+##############################################
+# END OF FILE
+##############################################
