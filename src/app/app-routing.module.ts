@@ -1,66 +1,76 @@
+// ============================================================================
+// EXPLANATION: WHAT HAPPENED HERE AND WHY THIS FILE WAS CHANGED
+// ============================================================================
+// Originally, the routing file was using Angular's functional guard (authGuard).
+// But later, you generated a CLASS-BASED guard named "cactivateGuard"
+// using CanActivate + LoginService + Router redirection.
+//
+// Because of this switch, the routing system needed to be updated:
+//
+// ✔ Removed old functional guard "authGuard"
+// ✔ Added new class-based guard "cactivateGuard"
+// ✔ Updated all routes to use canActivate: [cactivateGuard]
+// ✔ Ensured correct import path for the new guard
+//
+// This version is the corrected + merged + final routing file.
+// ============================================================================
+
+
 // -------------------------------------------
 // 1. Angular Router Core Imports
 // -------------------------------------------
-// RouterModule & Routes are required for defining paths and navigation.
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // -------------------------------------------
 // 2. Component Imports
 // -------------------------------------------
-// These are the components each route will display.
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
 // -------------------------------------------
-// 3. Auth Guard Import (Functional Guard)
+// 3. Class-Based Auth Guard Import
 // -------------------------------------------
-// Angular 16+ uses functional guards instead of class-based guards.
-// This guard will be used in canActivate to protect routes.
-import { authGuard } from './guards/auth.guard';
+// We now use the CLASS-BASED guard (implements CanActivate)
+// instead of the functional guard.
+import { cactivateGuard } from './cactivate.guard';
 
 // -------------------------------------------
 // 4. Route Definitions
 // -------------------------------------------
-// Notes:
-// - Routes map URLs to components.
-// - Redirect '' → '/login' means: open login page by default.
-// - canActivate: [authGuard] blocks unauthorized users.
 const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full' // Prevents partial matches
+    pathMatch: 'full' // Redirect root → login
   },
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [authGuard] // Protect home route
+    canActivate: [cactivateGuard] // Protected route
   },
   {
     path: 'login',
-    component: LoginComponent // Public route
+    component: LoginComponent // Public
   },
   {
     path: 'register',
-    component: RegisterComponent // Public route
+    component: RegisterComponent // Public
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [authGuard] // Protect profile route
+    canActivate: [cactivateGuard] // Protected route
   },
 ];
 
 // -------------------------------------------
 // 5. NgModule Wrapper for Routing
 // -------------------------------------------
-// RouterModule.forRoot(routes) registers all routes in the application.
-// Exporting RouterModule allows routerLink, router-outlet, etc., to work.
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
