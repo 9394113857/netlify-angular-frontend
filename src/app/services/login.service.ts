@@ -24,10 +24,10 @@ export class LoginService {
   // private apiUrl = 'https://pythonfamilyacc.pythonanywhere.com';
 
   // Production 2 (Railway)
-  // private apiUrl = 'https://railway-flask-backend-production.up.railway.app';
+  private apiUrl = 'https://railway-flask-backend-production.up.railway.app';
 
   // Development (Localhost)
-  private apiUrl = 'http://127.0.0.1:5000';
+  // private apiUrl = 'http://127.0.0.1:5000';
 
   constructor(private http: HttpClient) { }
 
