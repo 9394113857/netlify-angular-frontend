@@ -35,6 +35,6 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "Angular Deployment Completed"
-          to: "youremail@gmail.com"
+          to: "practicesession3@gmail.com"
           from: "Angular Deployment Bot"
           body: "Deployed latest commit: ${{ github.event.head_commit.message }}"
