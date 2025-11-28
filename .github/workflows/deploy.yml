@@ -1,4 +1,4 @@
-name: Angular CI/CD 
+name: Angular CI/CD
 
 on:
   push:
@@ -6,35 +6,63 @@ on:
       - main
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2️⃣ Setup Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # 4️⃣ Build Angular App
       - name: Build Angular App
         run: npm run build
 
+      # 5️⃣ Deploy to Netlify (FIXED INPUTS)
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: "./dist/netlify-angular-frontend"
           production-branch: "main"
-          branch: "main"
-          token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+      # 6️⃣ Send email on success
       - name: Send Email Notification
+        if: success()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "Angular Deployment Completed"
+          subject: "Angular Deployment Completed 🚀"
           to: "practicesession3@gmail.com"
           from: "Angular Deployment Bot"
-          body: "Deployed latest commit: ${{ github.event.head_commit.message }}"
+          body: "Deployment succeeded.\nCommit: ${{ github.event.head_commit.message }}"
+
+      # 7️⃣ Send email on failure
+      - name: Send Email on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "❌ Angular Deployment FAILED"
+          to: "practicesession3@gmail.com"
+          from: "Angular Deployment Bot"
+          body: "Deployment failed. Check GitHub Actions logs."
