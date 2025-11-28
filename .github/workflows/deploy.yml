@@ -10,25 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build Angular App
       - name: Build Angular App
         run: npm run build
 
-      # 5️⃣ Deploy to Netlify
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
@@ -39,7 +34,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      # 6️⃣ Email on Success
+      # SUCCESS EMAIL
       - name: Send Email Notification (Success)
         if: success()
         uses: dawidd6/action-send-mail@v3
@@ -48,60 +43,29 @@ jobs:
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "🚀 Angular Deployment Successful – Netlify CI/CD"
+          subject: "🚀 Angular Deployment Successful – Netlify"
           to: "practicesession3@gmail.com"
           from: "Angular Deployment Bot"
           content_type: "text/html"
           body: |
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="UTF-8" />
-              <style>
-                body {font-family: Arial, sans-serif;background:#f4f6f8;margin:0;padding:0;}
-                .container {background:#ffffff;width:90%;max-width:600px;margin:30px auto;border-radius:10px;
-                            box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:20px;}
-                .header {background:#4CAF50;padding:15px;color:white;border-radius:10px 10px 0 0;text-align:center;font-size:22px;}
-                .content {padding:20px;color:#333;line-height:1.6;}
-                .btn {display:inline-block;padding:10px 20px;background:#4CAF50;color:white;border-radius:6px;text-decoration:none;margin-top:10px;}
-                .footer {text-align:center;margin-top:20px;color:#777;font-size:12px;}
-                .info-box {background:#f0f0f0;padding:10px;border-radius:6px;margin-top:10px;}
-                .highlight {color:#4CAF50;font-weight:bold;}
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">🚀 Angular Deployment Successful</div>
-                <div class="content">
-                  <p>Hello Raghu,</p>
-                  <p>Your Angular project has been successfully deployed to Netlify! 🎉</p>
+            <b>🚀 Angular Deployment Successful</b><br><br>
+            Hello Raghu,<br><br>
+            Your Angular project has been successfully deployed to Netlify.<br><br>
 
-                  <div class="info-box">
-                    <p><span class="highlight">Live URL:</span>
-                      <a href="https://netlify-angular-frontend.netlify.app/" target="_blank">
-                        https://netlify-angular-frontend.netlify.app/
-                      </a>
-                    </p>
-                    <p><span class="highlight">Commit Message:</span> ${{ github.event.head_commit.message }}</p>
-                    <p><span class="highlight">Commit Author:</span> ${{ github.event.head_commit.author.name }}</p>
-                    <p><span class="highlight">Timestamp:</span> ${{ github.event.head_commit.timestamp }}</p>
-                  </div>
+            <b>Live URL:</b><br>
+            <a href="https://netlify-angular-frontend.netlify.app/">https://netlify-angular-frontend.netlify.app/</a><br><br>
 
-                  <p>Click below to check the live deployment:</p>
+            <b>Commit Message:</b> ${{ github.event.head_commit.message }}<br>
+            <b>Author:</b> ${{ github.event.head_commit.author.name }}<br>
+            <b>Timestamp:</b> ${{ github.event.head_commit.timestamp }}<br><br>
 
-                  <a class="btn" href="https://netlify-angular-frontend.netlify.app/" target="_blank">View Live App</a>
+            <b>View Live App:</b><br>
+            <a href="https://netlify-angular-frontend.netlify.app/">Click here to open the deployed app</a><br><br>
 
-                  <p>If unexpected, please review workflow logs.</p>
-                </div>
+            Regards,<br>
+            GitHub Actions – Netlify CI/CD
 
-                <div class="footer">
-                  Sent automatically by GitHub Actions – Netlify CI/CD
-                </div>
-              </div>
-            </body>
-            </html>
-
-      # 7️⃣ Email on Failure
+      # FAILURE EMAIL
       - name: Send Email Notification (Failure)
         if: failure()
         uses: dawidd6/action-send-mail@v3
@@ -110,45 +74,19 @@ jobs:
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "❌ Angular Deployment FAILED – Netlify CI/CD"
+          subject: "❌ Angular Deployment FAILED – Netlify"
           to: "practicesession3@gmail.com"
           from: "Angular Deployment Bot"
           content_type: "text/html"
           body: |
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="UTF-8" />
-              <style>
-                body {font-family: Arial, sans-serif;background:#ffeded;margin:0;padding:0;}
-                .container {background:#ffffff;width:90%;max-width:600px;margin:30px auto;border-radius:10px;
-                            box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:20px;}
-                .header {background:#d9534f;padding:15px;color:white;border-radius:10px 10px 0 0;text-align:center;font-size:22px;}
-                .content {padding:20px;color:#333;line-height:1.6;}
-                .footer {text-align:center;margin-top:20px;color:#777;font-size:12px;}
-                .info-box {background:#ffe5e5;padding:10px;border-radius:6px;margin-top:10px;}
-                .highlight {color:#d9534f;font-weight:bold;}
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">❌ Angular Deployment Failed</div>
+            <b>❌ Angular Deployment Failed</b><br><br>
+            Hello Raghu,<br><br>
+            Your Angular app deployment to Netlify failed.<br><br>
 
-                <div class="content">
-                  <p>Hello Raghu,</p>
-                  <p>Your Angular app deployment to Netlify has failed.</p>
+            <b>Commit Message:</b> ${{ github.event.head_commit.message }}<br>
+            <b>Author:</b> ${{ github.event.head_commit.author.name }}<br><br>
 
-                  <div class="info-box">
-                    <p><span class="highlight">Commit Message:</span> ${{ github.event.head_commit.message }}</p>
-                    <p><span class="highlight">Commit Author:</span> ${{ github.event.head_commit.author.name }}</p>
-                  </div>
+            Please check the GitHub Actions logs to investigate the issue.<br><br>
 
-                  <p>Please check GitHub Actions logs to fix the issue.</p>
-                </div>
-
-                <div class="footer">
-                  Sent automatically by GitHub Actions – Netlify CI/CD
-                </div>
-              </div>
-            </body>
-            </html>
+            Regards,<br>
+            GitHub Actions – Netlify CI/CD
