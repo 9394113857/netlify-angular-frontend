@@ -3,10 +3,10 @@ name: Angular CI/CD
 on:
   push:
     branches:
-      - main
+      - main 
 
-jobs:
-  build-deploy:
+jobs: 
+  build-deploy: 
     runs-on: ubuntu-latest
 
     steps:
