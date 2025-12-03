@@ -18,7 +18,7 @@ export class LoginService {
   // private apiUrl = 'https://railway-flask-backend-production.up.railway.app/api';
 
   // ACTIVE LOCAL BACKEND (Flask)
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrl = 'http://localhost:5000/api'; 
 
 
   constructor(private http: HttpClient) {}
