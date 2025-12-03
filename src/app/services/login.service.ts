@@ -13,12 +13,13 @@ export class LoginService {
 
   // OLD URLS (REFERENCE ONLY)
   // private apiUrl = 'https://pythonfamilyacc.pythonanywhere.com';
-
-  // Production 2 (Railway)
+  // private apiUrl = 'https://pythonfamilyacc.pythonanywhere.com/api';
   // private apiUrl = 'https://railway-flask-backend-production.up.railway.app';
+  // private apiUrl = 'https://railway-flask-backend-production.up.railway.app/api';
 
-  // Development (Localhost)
-  private apiUrl = 'http://127.0.0.1:5000';
+  // ACTIVE LOCAL BACKEND (Flask)
+  private apiUrl = 'http://localhost:5000/api';
+
 
   constructor(private http: HttpClient) {}
 

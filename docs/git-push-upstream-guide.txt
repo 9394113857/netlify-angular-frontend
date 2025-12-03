@@ -1,0 +1,42 @@
+# ==========================================================
+# PUSHING A NEW LOCAL BRANCH TO GITHUB (WITH COMMENTS)
+# ==========================================================
+
+# STEP 1 — Confirm you are currently on the correct branch
+git branch
+# The active branch (with *) should be:
+#   * feature/sqlalchemy-migrations
+# If not, switch using:
+#   git checkout feature/sqlalchemy-migrations
+
+
+# STEP 2 — FIRST PUSH MUST SET UPSTREAM (very important)
+git push --set-upstream origin feature/sqlalchemy-migrations
+
+# WHY?
+# ----
+# --set-upstream (or -u) tells Git:
+#    "This local branch should push to this specific remote branch."
+#
+# Without upstream, 'git push' fails because Git doesn't know
+# where to push your new local branch.
+#
+# After running this once, Git remembers the link:
+#    local → origin/feature/sqlalchemy-migrations
+
+
+# STEP 3 — After upstream is set, you can push normally forever
+git push
+# No need to specify branch names again.
+
+
+# STEP 4 — Optional: Check tracking status
+git branch -vv
+# You should see something like:
+#   feature/sqlalchemy-migrations  abc123 [origin/feature/sqlalchemy-migrations] Commit msg
+# This confirms the upstream tracking is correctly set.
+
+
+# ==========================================================
+# END OF FILE
+# ==========================================================

@@ -1,0 +1,51 @@
+# ============================
+# FILE: git-branch-fetch-reference.txt
+# PURPOSE: Steps to fetch missing branches from GitHub and checkout locally
+# ============================
+
+# STEP 1 — Verify which remote repository your project is using
+git remote -v
+# This shows the GitHub URL your local repo is connected to.
+
+# STEP 2 — Fetch ALL branches from GitHub (including newly created ones)
+git fetch --all --prune
+# --all  = fetch updates from all remotes (normally "origin")
+# --prune = remove old/deleted remote branch references
+# After this, Git will know all remote branches like:
+#   origin/feature/sqlalchemy-migrations
+
+# STEP 3 — Check all REMOTE branches available on GitHub
+git ls-remote --heads origin
+# This shows every branch that exists on GitHub.
+# Example output:
+#   refs/heads/main
+#   refs/heads/features/auth-module-angular
+#   refs/heads/feature/sqlalchemy-migrations
+
+# STEP 4 — Check all LOCAL + REMOTE branches inside your machine
+git branch -a
+# Local branches:
+#   main
+#   features/auth-module-angular
+# Remote branches:
+#   remotes/origin/main
+#   remotes/origin/feature/sqlalchemy-migrations
+
+# STEP 5 — Create a LOCAL branch from a REMOTE branch
+git checkout -b feature/sqlalchemy-migrations origin/feature/sqlalchemy-migrations
+# -b = create new local branch
+# This command:
+#   1. Creates local: feature/sqlalchemy-migrations
+#   2. Connects (tracks) remote: origin/feature/sqlalchemy-migrations
+#   3. Switches you to the new branch
+
+# STEP 6 — Verify you switched to the new branch
+git branch
+# Expected output:
+#   * feature/sqlalchemy-migrations
+#     features/auth-module-angular
+#     main
+
+# ============================
+# END OF FILE
+# ============================
