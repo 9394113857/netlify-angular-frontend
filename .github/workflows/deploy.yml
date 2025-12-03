@@ -1,46 +1,54 @@
-name: Angular CI/CD               
+name: Angular CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main 
+      - main
 
-jobs: 
-  build-deploy: 
+jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
+      # 1️⃣ Checkout repository with FULL history
+      #    (Needed to checkout a specific commit)
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # 2️⃣ Setup Node.js
+      # 2️⃣ Checkout the required commit SHA
+      - name: Checkout Specific Commit
+        run: git checkout 1c512d6bb3475a551660ce312cfe868217a79fb1
+
+      # 3️⃣ Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # 3️⃣ Install dependencies
+      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build Angular App
+      # 5️⃣ Angular build
       - name: Build Angular App
-        run: npm run build
+        run: npm run build --if-present
 
-      # 5️⃣ Deploy to Netlify (FIXED INPUTS)
+      # 6️⃣ Deploy to Netlify
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: "./dist/netlify-angular-frontend"
           production-branch: "main"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-commit-comment: false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      # 6️⃣ Send email on success
-      - name: Send Email Notification
+      # 7️⃣ Email Notification (SUCCESS)
+      - name: Send Successful Deployment Email
         if: success()
         uses: dawidd6/action-send-mail@v3
         with:
@@ -49,12 +57,16 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "Angular Deployment Completed 🚀"
-          to: "practicesession3@gmail.com" 
-          from: "Angular Deployment Bot" 
-          body: "Deployment succeeded.\nCommit: ${{ github.event.head_commit.message }}"
+          to: "practicesession3@gmail.com"
+          from: "Angular Deployment Bot"
+          body: |
+            ✔ Deployment Succeeded!
+            ✔ Commit ID: 1c512d6bb3475a551660ce312cfe868217a79fb1
+            ✔ Message: ${{ github.event.head_commit.message }}
+            ✔ Branch: main
 
-      # 7️⃣ Send email on failure
-      - name: Send Email on Failure
+      # 8️⃣ Email Notification (FAILURE)
+      - name: Send Failure Notification Email
         if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
@@ -65,4 +77,7 @@ jobs:
           subject: "❌ Angular Deployment FAILED"
           to: "practicesession3@gmail.com"
           from: "Angular Deployment Bot"
-          body: "Deployment failed. Check GitHub Actions logs."
+          body: |
+            ❌ Deployment FAILED!
+            ❌ Commit ID: 1c512d6bb3475a551660ce312cfe868217a79fb1
+            Please review GitHub Actions logs.
