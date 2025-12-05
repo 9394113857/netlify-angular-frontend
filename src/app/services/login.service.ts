@@ -1,5 +1,5 @@
 // ----------------------------------------------------------
-// LoginService - Flask API Integration (FINAL)
+// LoginService - Flask API Integration (FINAL PRODUCTION READY)
 // ----------------------------------------------------------
 
 import { Injectable } from '@angular/core';
@@ -11,15 +11,11 @@ import { Observable } from 'rxjs';
 })
 export class LoginService {
 
-  // OLD URLS (REFERENCE ONLY)
-  // private apiUrl = 'https://pythonfamilyacc.pythonanywhere.com';
-  // private apiUrl = 'https://pythonfamilyacc.pythonanywhere.com/api';
-  // private apiUrl = 'https://railway-flask-backend-production.up.railway.app';
-  // private apiUrl = 'https://railway-flask-backend-production.up.railway.app/api';
+  // 🔥 ACTIVE PRODUCTION BACKEND (Railway Flask API)
+  private apiUrl = 'https://railway-flask-backend-production.up.railway.app/api';
 
-  // ACTIVE LOCAL BACKEND (Flask)
-  private apiUrl = 'http://localhost:5000/api'; 
-
+  // (Optional) Keep localhost uncommented when needed for development:
+  // private apiUrl = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) {}
 
@@ -33,12 +29,7 @@ export class LoginService {
   ): Observable<any> {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    const body: any = { username, password };
-    if (name) body.name = name;
-    if (email) body.email = email;
-    if (phone) body.phone = phone;
-    if (address) body.address = address;
+    const body: any = { username, password, name, email, phone, address };
 
     return this.http.post(`${this.apiUrl}/register`, body, { headers });
   }
@@ -69,8 +60,7 @@ export class LoginService {
       throw new Error('No token found!');
     }
 
-    const headers = new HttpHeaders()
-      .set('Authorization', `Bearer ${token}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return this.http.get(`${this.apiUrl}/profile`, { headers });
   }
