@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 export class LoginService {
 
   // 🔥 ACTIVE PRODUCTION BACKEND (Railway Flask API)
-  private apiUrl = 'https://railway-flask-backend-production.up.railway.app/api';
+  private apiUrl = 'https://railway-flask-backend-production.up.railway.app/api';     
 
   // (Optional) Keep localhost uncommented when needed for development:
   // private apiUrl = 'http://localhost:5000/api';
